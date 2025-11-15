@@ -32,12 +32,47 @@ void ClearAllCreatedAICars() {
 	}
 }
 
+// screenshot cars use different car variations that don't exist for FE cars(?)
+struct tScreenshotCarHack {
+	std::string name;
+	std::string modelName;
+};
+tScreenshotCarHack aScreenshotCars[] = {
+		{"screenshot_911t_grip_1", "997tt"},
+		{"screenshot_ae86_grip_1", "corolla"},
+		{"screenshot_corvette_grip_1", "corvette"},
+		{"screenshot_cuda_grip_1", "cuda"},
+		{"screenshot_elise_grip_1", "elise"},
+		{"screenshot_g35_grip_1", "g35"},
+		{"screenshot_gt500_grip_1", "mustangshlbyn"},
+		{"screenshot_is350_grip_1", "is350"},
+		{"screenshot_kobel_s15_grip_1", "silvia"},
+		{"screenshot_mustang_grip_1", "mustanggt"},
+		{"screenshot_rsx_grip_1", "rsx"},
+		{"screenshot_rx7_grip_1", "rx7"},
+		{"screenshot_rx8_grip_1", "rx8"},
+		{"screenshot_s15_grip_1", "silvia"},
+		{"screenshot_skyline_grip_1", "skyline"},
+		{"screenshot_supra_grip_1", "supra"},
+};
+
 bool CreateAndPreviewAICar(uint32_t hash) {
 	if (!Attrib::FindCollection(0x27E73952, hash)) return false;
 
+#ifdef SCREENSHOT_CAR_HACK
+	uint32_t screenshotHackOldHash;
+	uint32_t screenshotHackModel = 0;
+	for (auto& mdl : aScreenshotCars) {
+		if (hash == Attrib::StringHash32(mdl.name.c_str())) {
+			screenshotHackOldHash = hash;
+			screenshotHackModel = Attrib::StringHash32(mdl.modelName.c_str());
+		}
+	}
+#endif
+
 	auto cars = &UserProfile::spUserProfiles[0]->mCarStable;
-	if (FEPlayerCarDB::GetCarRecordByHandle(cars, hash)) {
-		nFECarSetter = nLastPreviewedCar = hash;
+	if (auto car = FEPlayerCarDB::GetCarRecordByHandle(cars, hash)) {
+		nFECarSetter = nLastPreviewedCar = car->Handle;
 		lastState = "Previewing car from records";
 		return true;
 	}
@@ -114,42 +149,6 @@ void PresetCarEditor() {
 	}
 
 	auto cars = &UserProfile::spUserProfiles[0]->mCarStable;
-
-	/*if (DrawMenuOption("Car Records")) {
-		ChloeMenuLib::BeginMenu();
-
-		for (int i = 0; i < 410; i++) {
-			auto car = &cars->CarTable[i];
-			auto name = FECarRecord::GetDebugName(car);
-			if (!name) continue;
-			if (DrawMenuOption(std::format("{} - {}", i, name ? name : "(null)"))) {
-				ChloeMenuLib::BeginMenu();
-
-				DrawMenuOption(std::format("Handle - {:X}", car->Handle));
-				DrawMenuOption(std::format("FEKey - {:X}", car->FEKey));
-				DrawMenuOption(std::format("VehicleKey - {:X}", car->VehicleKey));
-				DrawMenuOption(std::format("PresetKey - {:X}", car->PresetKey));
-				DrawMenuOption(std::format("FilterBits - {:X}", car->FilterBits));
-				DrawMenuOption(std::format("Customization - {}", car->Customization));
-				DrawMenuOption(std::format("CareerHandle - {}", car->CareerHandle));
-				if (DrawMenuOption(std::format("IsPresetSkin - {}", car->IsPresetSkin))) {
-					car->IsPresetSkin = !car->IsPresetSkin;
-				}
-
-				if (car->Handle != 0xFFFFFFFF && DrawMenuOption("Preview")) {
-					nFECarSetter = nLastPreviewedCar = car->Handle;
-				}
-
-				if (car->Handle != 0xFFFFFFFF && DrawMenuOption("Add Car to Career")) {
-					AddCarToCareer(car->Handle);
-				}
-
-				ChloeMenuLib::EndMenu();
-			}
-		}
-
-		ChloeMenuLib::EndMenu();
-	}*/
 
 	if (DrawMenuOption("Preset Cars")) {
 		ChloeMenuLib::BeginMenu();
@@ -882,6 +881,42 @@ void PresetCarEditor() {
 				customization->mBlueprintIsLocked[0] = customization->mBlueprintIsLocked[1] = customization->mBlueprintIsLocked[2] = false;
 			}
 		}
+	}
+
+	if (DrawMenuOption("Car Records (Debug)")) {
+		ChloeMenuLib::BeginMenu();
+
+		for (int i = 0; i < 410; i++) {
+			auto car = &cars->CarTable[i];
+			auto name = FECarRecord::GetDebugName(car);
+			if (!name) continue;
+			if (DrawMenuOption(std::format("{} - {}", i, name ? name : "(null)"))) {
+				ChloeMenuLib::BeginMenu();
+
+				DrawMenuOption(std::format("Handle - {:X}", car->Handle));
+				DrawMenuOption(std::format("FEKey - {:X}", car->FEKey));
+				DrawMenuOption(std::format("VehicleKey - {:X}", car->VehicleKey));
+				DrawMenuOption(std::format("PresetKey - {:X}", car->PresetKey));
+				DrawMenuOption(std::format("FilterBits - {:X}", car->FilterBits));
+				DrawMenuOption(std::format("Customization - {}", car->Customization));
+				DrawMenuOption(std::format("CareerHandle - {}", car->CareerHandle));
+				if (DrawMenuOption(std::format("IsPresetSkin - {}", car->IsPresetSkin))) {
+					car->IsPresetSkin = !car->IsPresetSkin;
+				}
+
+				if (car->Handle != 0xFFFFFFFF && DrawMenuOption("Preview")) {
+					nFECarSetter = nLastPreviewedCar = car->Handle;
+				}
+
+				if (car->Handle != 0xFFFFFFFF && DrawMenuOption("Add Car to Career")) {
+					AddCarToCareer(car->Handle);
+				}
+
+				ChloeMenuLib::EndMenu();
+			}
+		}
+
+		ChloeMenuLib::EndMenu();
 	}
 
 	ChloeMenuLib::EndMenu();
