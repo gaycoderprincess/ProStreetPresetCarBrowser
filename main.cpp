@@ -57,18 +57,18 @@ tScreenshotCarHack aScreenshotCars[] = {
 };
 
 bool CreateAndPreviewAICar(uint32_t hash) {
-	if (!Attrib::FindCollection(0x27E73952, hash)) return false;
+	auto collection = Attrib::FindCollection(0x27E73952, hash);
+	if (!collection) return false;
 
-#ifdef SCREENSHOT_CAR_HACK
-	uint32_t screenshotHackOldHash;
-	uint32_t screenshotHackModel = 0;
 	for (auto& mdl : aScreenshotCars) {
 		if (hash == Attrib::StringHash32(mdl.name.c_str())) {
-			screenshotHackOldHash = hash;
-			screenshotHackModel = Attrib::StringHash32(mdl.modelName.c_str());
+			auto instance = Attrib::Instance(collection, 0);
+			if (auto type = (uint32_t*)Attrib::Instance::GetData(&instance, Attrib::StringHash32("CarType"), 0)) {
+				type[0] = Attrib::StringHash32("pvehicle");
+				type[1] = Attrib::StringHash32(mdl.modelName.c_str());
+			}
 		}
 	}
-#endif
 
 	auto cars = &UserProfile::spUserProfiles[0]->mCarStable;
 	if (auto car = FEPlayerCarDB::GetCarRecordByHandle(cars, hash)) {
