@@ -63,7 +63,7 @@ bool CreateAndPreviewAICar(uint32_t hash) {
 	for (auto& mdl : aScreenshotCars) {
 		if (hash == Attrib::StringHash32(mdl.name.c_str())) {
 			auto instance = Attrib::Instance(collection, 0);
-			if (auto type = (uint32_t*)Attrib::Instance::GetData(&instance, Attrib::StringHash32("CarType"), 0)) {
+			if (auto type = (uint32_t*)Attrib::Instance::GetAttributePointer(&instance, Attrib::StringHash32("CarType"), 0)) {
 				type[0] = Attrib::StringHash32("pvehicle");
 				type[1] = Attrib::StringHash32(mdl.modelName.c_str());
 			}
