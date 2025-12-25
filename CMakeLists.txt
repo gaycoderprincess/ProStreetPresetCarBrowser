@@ -17,7 +17,7 @@ add_library(NFSPSPresetCarBrowser SHARED main.cpp)
 target_include_directories(NFSPSPresetCarBrowser PUBLIC ../nya-common)
 target_include_directories(NFSPSPresetCarBrowser PUBLIC ../nya-common/3rdparty)
 target_include_directories(NFSPSPresetCarBrowser PUBLIC ../nya-common-nfsps)
-target_include_directories(NFSPSPresetCarBrowser PUBLIC ../FlatOutUCMenuLib)
+target_include_directories(NFSPSPresetCarBrowser PUBLIC ../CwoeeMenuLib)
 target_link_options(NFSPSPresetCarBrowser PRIVATE "-Wl,--exclude-all-symbols")
 
 set_target_properties(NFSPSPresetCarBrowser PROPERTIES PREFIX "")
