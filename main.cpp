@@ -931,8 +931,8 @@ BOOL WINAPI DllMain(HINSTANCE, DWORD fdwReason, LPVOID) {
 			}
 
 			ChloeMenuLib::RegisterMenu("Preset Car Browser", &PresetCarEditor);
-			NyaHooks::PlaceWorldServiceHook();
-			NyaHooks::aWorldServiceFuncs.push_back(OnWorldService);
+			NyaHooks::WorldServiceHook::Init();
+			NyaHooks::WorldServiceHook::aFunctions.push_back(OnWorldService);
 		} break;
 		default:
 			break;
