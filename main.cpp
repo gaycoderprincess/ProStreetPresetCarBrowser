@@ -925,14 +925,14 @@ void PresetCarEditor() {
 BOOL WINAPI DllMain(HINSTANCE, DWORD fdwReason, LPVOID) {
 	switch( fdwReason ) {
 		case DLL_PROCESS_ATTACH: {
-			if (NyaHookLib::GetEntryPoint() != 0x16AA080) {
-				MessageBoxA(nullptr, "Unsupported game version! Make sure you're using v1.1 (.exe size of 3765248 bytes)", "nya?!~", MB_ICONERROR);
+			if (NyaHookLib::GetEntryPoint() != 0x16AA080 && NyaHookLib::GetEntryPoint() != 0x428C25) {
+				MessageBoxA(nullptr, "Unsupported game version! Make sure you're using v1.1 (.exe size of 3765248 or 28739656 bytes)", "nya?!~", MB_ICONERROR);
 				return TRUE;
 			}
 
 			ChloeMenuLib::RegisterMenu("Preset Car Browser", &PresetCarEditor);
 			NyaHooks::WorldServiceHook::Init();
-			NyaHooks::WorldServiceHook::aFunctions.push_back(OnWorldService);
+			NyaHooks::WorldServiceHook::aPreFunctions.push_back(OnWorldService);
 		} break;
 		default:
 			break;
