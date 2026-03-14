@@ -7,7 +7,7 @@ A plugin for Need for Speed: ProStreet that allows you to preview and use preset
 
 ## Installation
 
-- Make sure you have v1.1 of the game, as this is the only version this plugin is compatible with. (exe size of 3765248 bytes)
+- Make sure you have v1.1 of the game, as this is the only version this plugin is compatible with. (exe size of 3765248 or 28739656 bytes)
 - Plop the files into your game folder, press F5 in game to open the menu.
 - Enjoy, nya~ :3
 
